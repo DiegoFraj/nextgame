@@ -4,7 +4,7 @@ from pygame.locals import *
 
 # Set size of window
 size = 1200,800
-background_img = pygame.image.load('notebook.jpg')
+#background_img = pygame.image.load('notebook.jpg')
 #background_img = pygame.transform.scale(background_img, (1280, 768))
 
 # Colours    R    G    B
@@ -27,20 +27,21 @@ class PORTRAIT:
         # Initialize variables
         self.background = pygame.Surface(size)
 
-        '''
+        
         self.flechaImg = pygame.image.load('flecha.png')
+        self.flechaImg = pygame.transform.scale(self.flechaImg, (200,200))
         self.flechaImg_rect = self.flechaImg.get_rect()
-        self.flechaImg_rect = self.flechaImg_rect.move(1000,500)
-        '''
+        self.flechaImg_rect = self.flechaImg_rect.move(800,500)
+        
 
         self.next_scene = next_scene
         
     def draw(self,screen, dt):
         # Draw them 
         font = pygame.font.SysFont("comicsansms",80)
-        img = font.render('Tareas',True, NAVYBLUE)
+        img = font.render('Tareas',True, BLACK)
         screen.blit(img, (500,334)) 
-        #screen.blit(self.flechaImg, (1000,500))
+        screen.blit(self.flechaImg, (800,500))
     
     def update(self, events, dt):
         for event in events:
@@ -49,6 +50,22 @@ class PORTRAIT:
                 if self.flechaImg_rect.collidepoint(mouse_pos):
                     #pygame.time.set_timer(fade_event, 1000)
                     return (self.next_scene, None)
+
+class GAME1:
+    def __init__(self, next_scene):
+        self.background = pygame.Surface(size)
+
+    def start(self, gamestate):
+        self.gamestate = gamestate
+
+    def draw(self,screen, dt):
+        self.background = pygame.Surface(size)
+
+    def update(self, events, dt):
+       for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN: 
+                print('ok')
+
 
 def main():
     # Inicializamos pygame
@@ -62,12 +79,13 @@ def main():
     pygame.display.set_caption("Tareas")
     icon = pygame.image.load('icon.png')
     pygame.display.set_icon(icon)
-    #fondoImg = pygame.image.load('notebook.jpg')
+    fondoImg = pygame.image.load('notebook.jpg')
 
     # Setting up Scenes
     dt = 0
     scenes = {
         'PORTADA': PORTRAIT('SEGUNDA'),
+        'SEGUNDA': GAME1('SEGUNDA'),
 
     }
     scene = scenes['PORTADA']
@@ -77,14 +95,21 @@ def main():
     while run:
         
         # Background img
-        screen.blit(background_img, (0,0))
+        screen.blit(fondoImg, (0,0))
 
         # EVENTS 
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT: # Si el evento es salir de la ventana, terminamos
                 run = False
-        
+
+        result = scene.update(events, dt)
+        if result:
+            next_scene, state = result
+            if next_scene:
+                scene = scenes[next_scene]
+                scene.start(state)
+
         scene.draw(screen, dt)
         pygame.display.flip()
         dt = clock.tick(60)
