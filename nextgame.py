@@ -92,25 +92,6 @@ class GAME1:
         self.question_rect = self.question.get_rect()
         self.question_rect = self.question_rect.move(830,200)
 
-        '''
-        self.imagenes1_array = ['girl1.png','girl2.png','girl3.png','girl4.png']
-        self.rects = []
-
-        for i in self.imagenes1_array:
-            i2 = pygame.image.load(i)
-            i2 = pygame.transform.scale(i2, (200,200))
-            s = pygame.Surface(i2.get_size())
-            r = s.get_rect()
-            
-            r.x = (200)
-            r.y = (200)
-            margin = 5
-            rl = [rect.inflate(margin*2, margin*2) for rect in self.rects]
-            if len(self.rects) == 0:
-                self.rects.append(r)
-                r.x = r.x + 210
-        '''
-
     def start(self, gamestate):
         self.gamestate = gamestate
 
@@ -142,12 +123,14 @@ class GAME1:
             # Second half 
             text2 = font.render('¿Qué es lo siguiente que hará Laura?',True, BLACK)
             screen.blit(text2, (200,100))
-
+            
+            # Blit the sequence 
             screen.blit(self.girl1, (200, 200))
             screen.blit(self.girl2, (420, 200))
             screen.blit(self.girl3, (640, 200))
             screen.blit(self.question, (860, 200))
 
+            # Blit the answers
             screen.blit(self.girl3, (self.g1))
             screen.blit(self.girl4, (self.g2))
             screen.blit(self.girl2, (self.g3))
